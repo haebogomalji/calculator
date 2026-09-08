@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#315442">
+<title>해보고말지 영양 계산기</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#faf8f1;color:#292622;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:620px;margin:auto;padding:24px 16px 50px}
+header{text-align:center}.logo{font-weight:900;color:#315442;font-size:18px}.sub{color:#777;font-size:14px;line-height:1.6}
+h1{font-size:27px;line-height:1.4;margin:10px 0}
+.card{background:#fff;border:1px solid #e4ded4;border-radius:20px;padding:20px;margin-top:14px}
+label{display:block;font-weight:800;margin:16px 0 7px}
+input{width:100%;height:52px;border:1px solid #d7d0c5;border-radius:12px;padding:0 13px;font-size:17px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.opt{margin:0}.opt input{position:absolute;opacity:0;width:1px;height:1px}.opt span{display:flex;min-height:52px;align-items:center;justify-content:center;border:1px solid #e4ded4;border-radius:12px;font-size:14px;font-weight:700}.opt input:checked+span{background:#e7efe8;border-color:#9bb19f;color:#315442}
+#go{width:100%;height:54px;margin-top:20px;border:0;border-radius:13px;background:#315442;color:white;font-size:17px;font-weight:900}
+#error{display:none;color:#a13c34;font-size:13px;margin:9px 0 0}
+#result{display:none}
+.hero{background:#e7efe8;text-align:center}.big{font-size:38px;font-weight:900;color:#315442}.row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #eee7de}.row:last-child{border:0}.num{font-size:27px;font-weight:900;color:#315442}.food{padding:13px 0;border-top:1px solid #eee7de}.small{font-size:12.5px;color:#777;line-height:1.7}
+#again{width:100%;height:50px;border:1px solid #ddd5ca;border-radius:12px;background:#fff;font-weight:800;margin-top:10px}
+@media(max-width:380px){.opts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="logo">해보고말지</div>
+<h1>40대, 이제는<br><b>무조건 굶지 않고 건강하게.</b></h1>
+<p class="sub">키 · 체중 · 운동량만 입력해보세요.</p>
+</header>
+
+<section class="card" id="form">
+<label for="h">키</label><input id="h" type="number" inputmode="decimal" placeholder="예: 164">
+<label for="w">체중</label><input id="w" type="number" inputmode="decimal" placeholder="예: 55">
+<label>운동량</label>
+<div class="opts">
+<label class="opt"><input type="radio" name="ex" value="1.2"><span>거의 안 함</span></label>
+<label class="opt"><input type="radio" name="ex" value="1.375"><span>주 1~2회</span></label>
+<label class="opt"><input type="radio" name="ex" value="1.55"><span>주 3~4회</span></label>
+<label class="opt"><input type="radio" name="ex" value="1.725"><span>주 5회 이상</span></label>
+</div>
+<button id="go" type="button">내 영양 기준 알아보기</button>
+<div id="error">키·체중·운동량을 모두 입력해주세요.</div>
+</section>
+
+<section id="result">
+<div class="card hero">
+<div class="small">나의 하루 감량 참고 열량</div>
+<div class="big"><span id="kcal">-</span> kcal</div>
+</div>
+<div class="card">
+<div class="row"><div>💪 단백질</div><div class="num"><span id="p">-</span>g</div></div>
+<div class="row"><div>🥑 지방</div><div class="num"><span id="f">-</span>g</div></div>
+<div class="row"><div>🍚 탄수화물</div><div class="num"><span id="c">-</span>g</div></div>
+</div>
+<div class="card" style="background:#eef4ef;border:0">
+<h2 style="font-size:19px;margin-top:0;color:#315442">이렇게 시작해보세요</h2>
+<p class="sub" style="margin:0;color:#555">
+체중 숫자에만 집중하기보다<br>
+<b>충분한 단백질을 챙기는 것부터 시작해보세요.</b><br><br>
+다이어트할 때 근육을 지키면서 감량하고,<br>
+<b>요요를 줄이는 데 도움이 될 수 있어요.</b><br><br>
+내 몸에 맞는 식사량을 정하고<br>
+무리하게 굶지 않는 것부터 시작해보세요.
+</p>
+</div>
+<div class="card">
+<h2 style="font-size:19px;margin-top:0">💪 단백질을 음식으로 바꿔볼게요</h2>
+<p class="small">오늘 필요한 단백질을 실제 음식으로 보면 어느 정도일까요?</p>
+<div class="food"><b>🥚 계란 2개</b><div class="small">약 12g 단백질</div></div>
+<div class="food"><b>🐔 닭가슴살 100g</b><div class="small">약 23g 단백질</div></div>
+<div class="food"><b>🥛 그릭요거트 150g</b><div class="small">약 15g 단백질</div></div>
+<div class="food"><b>🥤 단백질쉐이크 1회</b><div class="small">약 20g 단백질</div></div>
+<p class="small" id="proteinSummary"></p>
+<p class="small">※ 식품별 단백질 함량은 제품에 따라 달라질 수 있어요.<br>※ 계산 결과는 참고용입니다.</p>
+</div>
+<div class="card" style="text-align:center">
+<button id="again" type="button">다시 계산하기</button>
+</div>
+</section>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  var go=document.getElementById("go");
+  var again=document.getElementById("again");
+  go.addEventListener("click", function(){
+    var h=parseFloat(document.getElementById("h").value);
+    var w=parseFloat(document.getElementById("w").value);
+    var ex=document.querySelector('input[name="ex"]:checked');
+    if(!h||!w||!ex){document.getElementById("error").style.display="block";return;}
+    document.getElementById("error").style.display="none";
+
+    var target = Math.round(w*25);
+    var kcal=target;
+    var pExact = w*1.6;
+var p = Math.round(pExact);
+    var f=Math.round(kcal*0.25/9);
+    var c=Math.max(0,Math.round((kcal-p*4-f*9)/4));
+
+    document.getElementById("kcal").textContent=kcal.toLocaleString("ko-KR");
+    document.getElementById("p").textContent=p;
+    document.getElementById("f").textContent=f;
+    document.getElementById("c").textContent=c;
+    var exampleProtein=12+23+15+20;
+    var diff=p-exampleProtein;
+    var summary="위 4가지를 모두 먹으면 약 <b>"+exampleProtein+"g</b>이에요.";
+    if(diff>0){
+      summary+="<br>내 목표까지 약 <b>"+diff+"g</b>가 더 필요해요. 나머지는 일반 식사에서 자연스럽게 채워보세요.";
+    }else if(diff<0){
+      summary+="<br>내 목표보다 약 <b>"+Math.abs(diff)+"g</b> 많은 양이에요. 식사량에 맞춰 조절해보세요.";
+    }else{
+      summary+="<br>내 목표량과 거의 비슷해요.";
+    }
+    document.getElementById("proteinSummary").innerHTML=summary;
+
+    document.getElementById("form").style.display="none";
+    document.getElementById("result").style.display="block";
+    window.scrollTo(0,0);
+  });
+  again.addEventListener("click", function(){
+    document.getElementById("result").style.display="none";
+    document.getElementById("form").style.display="block";
+    document.getElementById("h").value="";
+    document.getElementById("w").value="";
+    document.querySelectorAll('input[name="ex"]').forEach(function(x){x.checked=false;});
+    window.scrollTo(0,0);
+  });
+});
+</script>
+</body>
+</html>
